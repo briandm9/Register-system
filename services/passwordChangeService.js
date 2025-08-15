@@ -1,5 +1,5 @@
 const { generatePasswordToken } = require('../utils/jwt');
-const sendPasswordMail = require('../services/mails/sendPasswordMail');
+const sendPasswordMail = require('./mails/sendPasswordMail');
 const canSendEmail = require('../utils/emailThrottle');
 const canChangePassword = require('../utils/changePwThrottle');
   

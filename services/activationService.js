@@ -1,5 +1,5 @@
 const { generateActivationToken } = require('../utils/jwt');
-const sendActivationMail = require('../services/mails/sendActivationMail');
+const sendActivationMail = require('./mails/sendActivationMail');
 const canSendEmail = require('../utils/emailThrottle');
 
 const handleResendActivationEmail = async (user) => {
