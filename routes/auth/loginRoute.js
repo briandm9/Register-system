@@ -14,19 +14,15 @@ router.post('/', loginValidation, handleValidation, async (req ,res) =>{
 
         if(!user){
             return res.status(404).json({
-                error:{
-                    code: 'LOGIN_USER_ERROR',
-                    message: 'Login failed, user not found'
-                }
+                sucess: false,
+                message: 'User not found'
             });
         }
 
         if (!user.isActive) {
             return res.status(400).json({
-                error:{
-                    code: 'LOGIN_USER_NOTACTIVE',
-                    message: 'Login failed, user is not activated yet'
-                }
+                sucess: false,
+                message: 'User is not activated yet'
             });
         }
 
@@ -34,22 +30,21 @@ router.post('/', loginValidation, handleValidation, async (req ,res) =>{
 
         if (!passwordMatch) {
             return res.status(401).json({
-                error:{
-                    code: 'LOGIN_INVALID_CREDENTIALS',
-                    message: 'Login failed, invalid credentials'
-                }
+                sucess: false,
+                message: 'Invalid credentials'
             });
         }
 
         const token = generateLoginToken(user._id);
-        return res.status(200).json({ message: 'Login successful', token });
+        return res.status(200).json({ 
+            sucess: true, 
+            message: 'Login successful', token 
+        });
 
     } catch(error){
         return res.status(500).json({
-            error:{
-                code: 'LOGIN_SERVICE_ERROR',
-                message: 'Login service failed'
-            }
+            sucess: false,
+            message: 'Login service failed'
         });
     }
 })

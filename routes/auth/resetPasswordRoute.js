@@ -13,10 +13,8 @@ router.post('/', passwordValidation, handleValidation, async (req, res) => {
 
   if (!token) {
     return res.status(400).json({
-      error:{
-        code: 'RESET_PASSWORD_ERROR',
-        message: 'Token is missing'
-      }
+      sucess: false,
+      message: 'Token is missing'
     });
   }
 
@@ -26,28 +24,22 @@ router.post('/', passwordValidation, handleValidation, async (req, res) => {
 
     if (!user) {
         return res.status(404).json({
-          error:{
-            code: 'RESET_PASSWORD_USER_ERROR',
-            message: 'User not found'
-          }
+          sucess: false,
+          message: 'User not found'
         });
     }
 
     if (!user.isActive) {
         return res.status(403).json({
-          error:{
-            code: 'RESET_PASSWORD_USER_NOTACTIVE',
-            message: 'Account is not active, activate it before requesting new password'
-          }
+          sucess: false,
+          message: 'Account is not active, activate it before requesting new password'
         });
     }
 
     if (!canChangePassword(user.lastPasswordChange)){
       return res.status(429).json({
-        error:{
-          code: 'PASSWORD_CHANGE_LIMIT_REACHED',
-          message: 'Password update limit reached. Changes are allowed only once every 7 days'
-        }
+        sucess: false,
+        message: 'Password update limit reached. Changes are allowed only once every 7 days'
       });
     }
 
@@ -55,10 +47,8 @@ router.post('/', passwordValidation, handleValidation, async (req, res) => {
 
     if (comparation) {
       return res.status(400).json({
-        error:{
-          code: 'PASSWORD_IS_SAME',
-          message: 'New password cannot be the same as old password'
-        }
+        sucess: false,
+        message: 'New password cannot be the same as old password'
       });
     }
     
@@ -67,27 +57,29 @@ router.post('/', passwordValidation, handleValidation, async (req, res) => {
     user.lastPasswordChange = new Date();
     await user.save();
 
-    return res.status(200).json({ message: 'Password changed successfully' });
+    return res.status(200).json({ 
+      sucess: true, 
+      message: 'Password changed successfully' 
+    });
 
   } catch (err) {
     if (err.name === 'TokenExpiredError') {
         return res.status(500).json({
-          error:{
-            code: 'PASSWORD_CHANGE_EXPIRED_TOKEN',
-            message: 'You cannot change password with an expired token'
-          }
+          sucess: false,
+          message: 'You cannot change password with an expired token'
         });
     }
 
     if (err.message.startsWith('Invalid token type')) {
-      return res.status(400).json({ error: err.message });
+      return res.status(400).json({
+        sucess: false,
+        message: err.message
+      });
     }
 
     return res.status(400).json({
-      error:{
-        code: 'PASSWORD_CHANGE_INVALID_TOKEN',
-        message: 'Token is invalid'
-      }
+      sucess: false,
+      message: 'Token is invalid'
     });
   }
 });

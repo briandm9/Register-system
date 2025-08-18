@@ -9,12 +9,10 @@ router.get('/', async (req, res) => {
 
   if (!token) {
     return res.status(400).json({
-      error:{
-        code: 'ACTIVATION_TOKEN_ERROR',
-        message: 'Activation failed, token is missing'
-      }
+      success: false,
+      message: 'Token is missing'
     });
-  }
+  }  
 
   try {
     const payload = verifyTypedToken(token, 'activation');
@@ -22,26 +20,25 @@ router.get('/', async (req, res) => {
 
     if (!user) {
       return res.status(404).json({
-        error:{
-          code: 'ACTIVATION_USER_ERROR',
-          message: 'Activation failed, user not found'
-        }
+        success: false,
+        message: 'User not found'
       });
-    }
+    }    
 
     if (user.isActive) {
       return res.status(403).json({
-        error:{
-          code: 'ACTIVATION_ALREADY_ACTIVE',
-          message: 'Your account is already activated'
-        }
+        success: false,
+        message: 'Your account is already activated'
       });
-    }         
+    }             
 
     user.isActive = true;
     await user.save();
 
-    return res.status(200).json({ message: 'Your account has been successfully activated' });
+    return res.status(200).json({
+      success: true,
+      message: 'Your account has been successfully activated'
+    });    
 
   } catch (err) {
     if (err.name === 'TokenExpiredError') {
@@ -51,44 +48,39 @@ router.get('/', async (req, res) => {
 
         if (!user) {
           return res.status(404).json({
-            error:{
-              code: 'ACTIVATION_USER_ERROR',
-              message: 'Activation failed, user not found'
-            }
+            success: false,
+            message: 'User not found'
           });
-        }
+        }         
 
         if (user.isActive) {
           return res.status(403).json({
-            error:{
-              code: 'ACTIVATION_ALREADY_ACTIVE',
-              message: 'Your account is already activated'
-            }
+            success: false,
+            message: 'Your account is already activated'
           });
         }
 
         const result = await handleResendActivationEmail(user);
-        return res.status(result.status).json({ message: result.message });
+        return res.status(result.status).json({ sucess: result.sucess, message: result.message });
         
       } catch (mailError) {
         return res.status(500).json({
-          error:{
-            code: 'ACTIVATION_MAIL_RESEND_ERROR',
-            message: 'Token expired and failed to send a new activation email'
-          }
+          sucess: false,
+          message: 'Token expired and failed to send a new activation email'
         });
       }
     }
 
     if (err.message.startsWith('Invalid token type')) {
-      return res.status(400).json({ error: err.message });
-    }
+      return res.status(400).json({
+        sucess: false,
+        message: err.message
+      });
+    }    
 
     return res.status(400).json({
-      error:{
-        code: 'ACTIVATION_TOKEN_INVALID',
-        message: 'Activation failed, token is invalid'
-      }
+      sucess: false,
+      message: 'Token is invalid'
     });
   }
 });

@@ -16,30 +16,27 @@ router.post('/', registerValidation, handleValidation, async (req, res) => {
 
     if (!mailResult.success) {
       return res.status(500).json({
-        error:{
-          code: 'REGISTER_MAIL_ERROR',
-          message: 'Account created but failed to send activation email'
-        }
+        sucess: false,
+        message: 'Account created but failed to send activation email'
       });
     }
 
-    res.status(201).json({ message: 'Account created successfully. Please check your email to activate your account' });
+    res.status(201).json({
+      sucess: true,
+      message: 'Account created successfully. Please check your email to activate your account'
+    });
 
   } catch (err) {
     if (err.code === 11000 && err.keyPattern?.email) {
       return res.status(400).json({
-        error:{
-          code: 'REGISTER_ALREADY_REGISTERED',
-          message: 'This email adress is already registered'
-        }
+        sucess: false,
+        message: 'This email adress is already registered'
       });
     }
 
     return res.status(500).json({
-      error:{
-        code: 'REGISTER_SERVICE_ERROR',
-        message: 'An unexpected error occurred while creating your account'
-      }
+      sucess: false,
+      message: 'An unexpected error occurred while creating your account'
     });
   }
 });

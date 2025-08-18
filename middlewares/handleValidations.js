@@ -6,16 +6,17 @@ const handleValidation = (req, res, next) => {
   if (!errors.isEmpty()) {
     const formattedErrors = errors.array().map(err => ({
       field: err.param,
-      msg: err.msg
+      message: err.msg
     }));
 
     return res.status(400).json({
+      success: false,
       message: 'Some fields contain invalid or missing information',
       errors: formattedErrors
     });
   }
 
   next();
-}
+};
 
 module.exports = handleValidation;

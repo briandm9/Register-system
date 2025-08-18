@@ -13,31 +13,25 @@ router.post('/', emailValidation, handleValidation, async (req, res) =>{
 
         if (!user) {
             return res.status(404).json({
-                error:{
-                    code:'ACTIVATION_MAIL_USER_ERROR',
-                    message: 'User not found'
-                }
+                sucess: false,
+                message: 'User not found'
             });
         }
 
         if (user.isActive) {
             return res.status(403).json({
-                error:{
-                    code:'ACTIVATION_ALREADY_ACTIVE',
-                    message: 'Your account is already activated'
-                }
+                sucess: false,
+                message: 'Your account is already activated'
             });
         }
 
         const result = await handleResendActivationEmail(user);
-        return res.status(result.status).json({ message: result.message });
+        return res.status(result.status).json({ sucess: result.sucess, message: result.message });
         
     } catch(error){
         return res.status(500).json({
-            error:{
-                code: 'ACTIVATION_MAIL_SERVICE_ERROR',
-                message: 'Activation email service failed'
-            }
+            sucess: false,
+            message: 'Activation email service failed'
         });
     }
 })

@@ -13,31 +13,25 @@ router.post('/', emailValidation, handleValidation, async (req, res) =>{
 
         if (!user) {
             return res.status(404).json({
-                error:{
-                    code: 'RESET_PASSWORD_MAIL_ERROR',
-                    message: 'User not found'
-                }
+                sucess: false,
+                message: 'User not found'
             });
         }
 
         if (!user.isActive) {
             return res.status(403).json({
-                error:{
-                    code: 'RESET_PASSWORD_MAIL_NOTACTIVE',
-                    message: 'Account is not active, activate it before requesting new password'
-                }
+                sucess: false,
+                message: 'Account is not active, activate it before requesting new password'
             });
         }
 
         const result = await handleSendPasswordEmail(user);
-        return res.status(result.status).json({ message: result.message });
+        return res.status(result.status).json({ sucess: result.sucess, message: result.message });
         
     } catch(error){
         return res.status(500).json({
-            error:{
-                code: 'RESET_PASSWORD_SERVICE_ERROR',
-                message: 'Password reset mail service failed'
-            }
+            sucess: false,
+            message: 'Password reset mail service failed'
         });
     }
 })

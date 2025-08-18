@@ -4,14 +4,12 @@ const User = require('../models/user');
 const requireLogin = async (req, res, next) => {
   const token = req.headers['authorization']?.split(' ')[1];
   
-  if (!token){
+  if (!token) {
     return res.status(401).json({
-      error:{
-        code: 'AUTH_MISSING_TOKEN',
-        message: 'Token is missing'
-      }
+      success: false,
+      message: 'Token is missing'
     });
-  }
+  }  
   
   try {
     const payload = verifyTypedToken(token, 'login');
@@ -19,10 +17,8 @@ const requireLogin = async (req, res, next) => {
   
     if (!user) {
       return res.status(404).json({
-        error:{
-          code: 'AUTH_INVALID_USER',
-          message: 'User not found'
-        }
+        success: false,
+        message: 'User not found'
       });
     }
   
@@ -31,12 +27,10 @@ const requireLogin = async (req, res, next) => {
       
   } catch (error) {
     return res.status(401).json({
-      error: {
-        code: 'AUTH_INVALID_TOKEN',
-        message: 'Invalid or expired token'
-      }
+      success: false,
+      message: 'Invalid or expired token'
     });
-  }
+  }  
 };
 
 module.exports = requireLogin;
