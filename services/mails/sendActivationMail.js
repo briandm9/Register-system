@@ -2,7 +2,7 @@ const transporter = require('./mailTransporter');
 const logEmailError = require('../../utils/logger');
 
 const sendActivationMail = async (username, email, token) => {
-  const url = `http://${process.env.HOST}:${process.env.PORT}/activate?token=${token}`;
+  const url = `http://${process.env.CLIENT_HOST}:${process.env.CLIENT_PORT}/activate?token=${token}`;
 
   const mailOptions = {
     from: `"${process.env.APP_NAME}" <${process.env.GMAIL_USER}>`,

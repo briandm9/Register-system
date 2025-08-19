@@ -14,14 +14,14 @@ router.post('/', loginValidation, handleValidation, async (req ,res) =>{
 
         if(!user){
             return res.status(404).json({
-                sucess: false,
+                success: false,
                 message: 'User not found'
             });
         }
 
         if (!user.isActive) {
             return res.status(400).json({
-                sucess: false,
+                success: false,
                 message: 'User is not activated yet'
             });
         }
@@ -30,20 +30,20 @@ router.post('/', loginValidation, handleValidation, async (req ,res) =>{
 
         if (!passwordMatch) {
             return res.status(401).json({
-                sucess: false,
+                success: false,
                 message: 'Invalid credentials'
             });
         }
 
         const token = generateLoginToken(user._id);
         return res.status(200).json({ 
-            sucess: true, 
+            success: true, 
             message: 'Login successful', token 
         });
 
     } catch(error){
         return res.status(500).json({
-            sucess: false,
+            success: false,
             message: 'Login service failed'
         });
     }

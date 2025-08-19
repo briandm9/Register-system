@@ -61,11 +61,11 @@ router.get('/', async (req, res) => {
         }
 
         const result = await handleResendActivationEmail(user);
-        return res.status(result.status).json({ sucess: result.sucess, message: result.message });
+        return res.status(result.status).json({ success: result.success, message: result.message });
         
       } catch (mailError) {
         return res.status(500).json({
-          sucess: false,
+          success: false,
           message: 'Token expired and failed to send a new activation email'
         });
       }
@@ -73,13 +73,13 @@ router.get('/', async (req, res) => {
 
     if (err.message.startsWith('Invalid token type')) {
       return res.status(400).json({
-        sucess: false,
+        success: false,
         message: err.message
       });
     }    
 
     return res.status(400).json({
-      sucess: false,
+      success: false,
       message: 'Token is invalid'
     });
   }

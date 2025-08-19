@@ -13,7 +13,7 @@ router.post('/', passwordValidation, handleValidation, async (req, res) => {
 
   if (!token) {
     return res.status(400).json({
-      sucess: false,
+      success: false,
       message: 'Token is missing'
     });
   }
@@ -24,21 +24,21 @@ router.post('/', passwordValidation, handleValidation, async (req, res) => {
 
     if (!user) {
         return res.status(404).json({
-          sucess: false,
+          success: false,
           message: 'User not found'
         });
     }
 
     if (!user.isActive) {
         return res.status(403).json({
-          sucess: false,
+          success: false,
           message: 'Account is not active, activate it before requesting new password'
         });
     }
 
     if (!canChangePassword(user.lastPasswordChange)){
       return res.status(429).json({
-        sucess: false,
+        success: false,
         message: 'Password update limit reached. Changes are allowed only once every 7 days'
       });
     }
@@ -47,7 +47,7 @@ router.post('/', passwordValidation, handleValidation, async (req, res) => {
 
     if (comparation) {
       return res.status(400).json({
-        sucess: false,
+        success: false,
         message: 'New password cannot be the same as old password'
       });
     }
@@ -58,27 +58,27 @@ router.post('/', passwordValidation, handleValidation, async (req, res) => {
     await user.save();
 
     return res.status(200).json({ 
-      sucess: true, 
+      success: true, 
       message: 'Password changed successfully' 
     });
 
   } catch (err) {
     if (err.name === 'TokenExpiredError') {
         return res.status(500).json({
-          sucess: false,
+          success: false,
           message: 'You cannot change password with an expired token'
         });
     }
 
     if (err.message.startsWith('Invalid token type')) {
       return res.status(400).json({
-        sucess: false,
+        success: false,
         message: err.message
       });
     }
 
     return res.status(400).json({
-      sucess: false,
+      success: false,
       message: 'Token is invalid'
     });
   }

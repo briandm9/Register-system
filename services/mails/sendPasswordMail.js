@@ -1,7 +1,7 @@
 const transporter = require('./mailTransporter');
 
 const sendPasswordMail = async (username, email, token) => {
-    const url = `http://${process.env.HOST}:${process.env.PORT}/password-reset?token=${token}`;
+    const url = `http://${process.env.CLIENT_HOST}:${process.env.CLIENT_PORT}/password-reset?token=${token}`;
   
     const mailOptions = {
       from: `"${process.env.APP_NAME}" <${process.env.GMAIL_USER}>`,

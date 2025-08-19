@@ -1,7 +1,7 @@
 const { verifyTypedToken } = require('../utils/jwt');
 const User = require('../models/user');
 
-const requireLogin = async (req, res, next) => {
+const requireLoginToken = async (req, res, next) => {
   const token = req.headers['authorization']?.split(' ')[1];
   
   if (!token) {
@@ -33,4 +33,4 @@ const requireLogin = async (req, res, next) => {
   }  
 };
 
-module.exports = requireLogin;
+module.exports = requireLoginToken;

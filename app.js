@@ -6,7 +6,7 @@ require('dotenv').config();
 
 app.use(express.json());
 app.use(cors({
-  origin: [`http://${process.env.HOST}:${process.env.CLIENT_PORT}`],
+  origin: [`http://${process.env.CLIENT_HOST}:${process.env.CLIENT_PORT}`],
   methods: ['GET', 'POST'],
   credentials: true
 }));
@@ -19,6 +19,7 @@ const loginRoute = require('./routes/auth/loginRoute');
 const activationMailRoute = require('./routes/auth/activationMailRoute');
 const resetPasswordMailRoute = require('./routes/auth/resetPasswordMailRoute');
 const resetPasswordRoute = require('./routes/auth/resetPasswordRoute');
+const verifyTokenRoute = require('./routes/auth/verifyToken');
 
 app.use('/register', registerRoute);
 app.use('/activate', activateRoute);
@@ -26,11 +27,7 @@ app.use('/login', loginRoute);
 app.use('/activation-request', activationMailRoute);
 app.use('/reset-password-request', resetPasswordMailRoute);
 app.use('/password-reset', resetPasswordRoute);
-
-// Private test route (login token needed)
-
-const privateRoute = require('./routes/privateRoute');
-app.use('/', privateRoute);
+app.use('/verifyToken', verifyTokenRoute);
 
 // Server init
 

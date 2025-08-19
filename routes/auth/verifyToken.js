@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const requireLogin = require('../middlewares/authMiddleware');
+const requireLoginToken = require('../../middlewares/authMiddleware');
 
-router.get('/', requireLogin, (req, res) =>{
+router.get('/', requireLoginToken, (req, res) =>{
     return res.status(200).json({
         success: true,
-        message: `Welcome ${req.user.username}`
+        user: req.user
     });
 })
 

@@ -124,9 +124,9 @@ Allows the user to change the password using the token sent via email.
 
 ---
 
-### 🔐 GET `/`
+### 🔐 GET `/verifyToken`
 
-Protected route to test login token authentication.
+Returns the authenticated user information based on the provided token.
 
 **Header:**
 ```
@@ -134,7 +134,7 @@ Authorization: Bearer <token>
 ```
 
 **Responses:**
-- `200`: Welcome message.
+- `200`: Sucess true.
 - `401`: Invalid or missing token.
 
 ---
