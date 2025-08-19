@@ -134,7 +134,7 @@ Authorization: Bearer <token>
 ```
 
 **Responses:**
-- `200`: Sucess true.
+- `200`: Success true.
 - `401`: Invalid or missing token.
 
 ---
